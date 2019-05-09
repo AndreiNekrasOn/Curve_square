@@ -1,8 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#define debug printf("d\n")
+/*
+#define f1 _f1
+#define f2 _f2
+#define f3 _f3
+*/
+extern double f1(double);
+extern double f2(double);
+extern double f3(double);
 
+/*
 double f1(double x)
 {
     return log(x);
@@ -17,7 +25,7 @@ double f3(double x)
 {
     return 1 / (2-x)  + 6;
 }
-
+*/
 double d_f1(double x)
 {
     return 1 / x;
@@ -90,7 +98,6 @@ int main(void)
 {
     double eps1 = 0.0001;
     double eps2 = 0.0001;
-
     double f1_c_f2 = root(f1, f2, 6, 7, eps1, d_f1, d_f2); // c is cross
     double f1_c_f3 = root(f1, f3, 2.1, 3, eps1, d_f1, d_f3);
     double f2_c_f3 = root(f2, f3, 4, 5, eps1, d_f2, d_f3);
