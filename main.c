@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 /*
 #define f1 _f1
 #define f2 _f2
@@ -9,23 +10,8 @@
 extern double f1(double);
 extern double f2(double);
 extern double f3(double);
+int iterations = 1;
 
-/*
-double f1(double x)
-{
-    return log(x);
-}
-
-double f2(double x)
-{
-    return -2 * x + 14;
-}
-
-double f3(double x)
-{
-    return 1 / (2-x)  + 6;
-}
-*/
 double d_f1(double x)
 {
     return 1 / x;
@@ -56,13 +42,21 @@ double root(double (*f)(double), double (*g)(double), double a, double b, double
     {
         c = b - F(f, g, b) / F(df, dg, b);
         while(F(f, g, c) * F(f, g, c - eps) > 0)
+        {
             c = c - F(f, g, c) / F(df, dg, c);
+            iterations++;
+        }
+
+
     }
     else
     {
         c = a - F(f, g, a) / F(df, dg, a);
         while(F(f, g, c) * F(f, g, c + eps) > 0)
+        {
             c = c - F(f, g, c) / F(df, dg, c);
+            iterations++;
+        }
     }
 
     return c;
@@ -93,19 +87,37 @@ double integral(double (*f)(double), double a, double b, double eps)
 }
 
 
-
-int main(void)
+int main(int argc, char **argv)
 {
     double eps1 = 0.0001;
     double eps2 = 0.0001;
+    int iter1, iter2, iter3;
+    iterations = 1;
     double f1_c_f2 = root(f1, f2, 6, 7, eps1, d_f1, d_f2); // c is cross
+    iter1 = iterations;
+    iterations = 2;
     double f1_c_f3 = root(f1, f3, 2.1, 3, eps1, d_f1, d_f3);
+    iter2 = iterations;
+    iterations = 3;
     double f2_c_f3 = root(f2, f3, 4, 5, eps1, d_f2, d_f3);
+    iter3 = iterations;
 
     double i1 = integral(f1, f1_c_f3, f1_c_f2, eps2);
     double i2 = integral(f2, f2_c_f3, f1_c_f2, eps2);
     double i3 = integral(f3, f1_c_f3, f2_c_f3, eps2);
+    printf("%f\n", i2 + i3 - i1);
+    if(argc == 1) return 0;;
+    if(argc > 1)
+    {
+        if(strcmp(argv[1], "-coordinate") == 0) printf("f1 == f2 => x == %f\nf1 == f3 => x == %f\nf3 == f2 => x == %f\n ", f1_c_f2, f1_c_f3, f2_c_f3);
+        else if(strcmp(argv[1], "-help") == 0) printf("-help\n-coordinate\n-iterations", f1_c_f2, f1_c_f2, f2_c_f3);
+        else if(strcmp(argv[1], "-iterations") == 0) printf("f1 == f2 -- %d\nf1 == f2 -- %d\nf1 == f2 -- %d\n", iter1, iter2, iter3);
+        else printf("Wrong command name. Try -help for supported commands\n");
+    }
+    else printf("Too many arguments\n");
 
-    printf("%f\n%f %f %f\n", i2 + i3 - i1, f1_c_f2, f1_c_f3, f2_c_f3);
+
+
+
     return 0;
 }
