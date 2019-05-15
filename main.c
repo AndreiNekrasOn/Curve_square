@@ -88,25 +88,25 @@ int main(int argc, char **argv)
     double i2 = integral(f2, f2_c_f3, f1_c_f2, eps2);
     double i3 = integral(f3, f1_c_f3, f2_c_f3, eps2);
     printf("%f\n", i2 + i3 - i1);
-    if(argc > 1)
+    for(int i = 1; i <argc; i++)
     {
-        if(strcmp(argv[1], "-s") == 0) printf("f1 == f2 => x == %f\nf1 == f3 => x == %f\nf3 == f2 => x == %f\n ", f1_c_f2, f1_c_f3, f2_c_f3);
-        else if(strcmp(argv[1], "-i") == 0) printf("f1 == f2 -- %d\nf1 == f2 -- %d\nf1 == f2 -- %d\n", iter1, iter2, iter3);
-        else if(strcmp(argv[1], "-t=t1") == 0)
+        if(strcmp(argv[i], "-s") == 0) printf("f1 == f2 => x == %f\nf1 == f3 => x == %f\nf3 == f2 => x == %f\n ", f1_c_f2, f1_c_f3, f2_c_f3);
+        else if(strcmp(argv[i], "-i") == 0) printf("f1 == f2 -- %d\nf1 == f2 -- %d\nf1 == f2 -- %d\n", iter1, iter2, iter3);
+        else if(strcmp(argv[i], "-t=t1") == 0)
         {
             printf("test: x^4 - 16 = 0 => x = %f\
                    \nintegral(f) = %f\
-                   \nfrom 0.0 to 3.0", root(t1, zero, 0.0, 3.0, eps1, dt1, zero),
+                   \nfrom 0.0 to 3.0\n", root(t1, zero, 0.0, 3.0, eps1, dt1, zero),
                         integral(t1, 0.0, 3.0, eps2));
         }
-        else if(strcmp(argv[1], "-t=t2") == 0)
+        else if(strcmp(argv[i], "-t=t2") == 0)
         {
-            printf("test: x^4 - 16 = 0 => x = %f\
+            printf("test: sin(x) = 0 => x = %f\
                    \nintegral(f) = %f\
-                   \nfrom 0.1 to 3.2", root(t2, zero, 0.1, 3.2, eps1, dt2, zero),
+                   \nfrom 0.1 to 3.2\n", root(t2, zero, 0.1, 3.2, eps1, dt2, zero),
                         integral(t2, 0.1, 3.2, eps2));
         }
-        else if(strcmp(argv[1], "-help") == 0) printf("-help - shows this list\n-s - square\n-i - iterations\n-t=t1/t2 - test functions\n", f1_c_f2, f1_c_f2, f2_c_f3);
+        else if(strcmp(argv[i], "-help") == 0) printf("-help - shows this list\n-s - square\n-i - iterations\n-t=t1/t2 - test functions\n", f1_c_f2, f1_c_f2, f2_c_f3);
         else printf("Wrong command name. Try -help for supported commands\n");
     }
 
