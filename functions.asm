@@ -12,8 +12,8 @@ section .bss
     tmp resq 1
 
 section .text
-global _f1
-_f1:
+global f1
+f1:
     push ebp
     mov ebp, esp
     finit
@@ -26,8 +26,8 @@ _f1:
     ret 
 
 
-global _f2
-_f2:
+global f2
+f2:
     push ebp
     mov ebp, esp
     finit
@@ -39,8 +39,8 @@ _f2:
     ret 
 
 
-global _f3
-_f3:
+global f3
+f3:
     push ebp
     mov ebp, esp
     finit
@@ -53,8 +53,8 @@ _f3:
     leave
     ret 
     
-global _d_f1
-_d_f1:
+global d_f1
+d_f1:
     push ebp
     mov ebp, esp
     finit
@@ -64,8 +64,8 @@ _d_f1:
     leave
     ret 
 
-global _d_f2
-_d_f2:
+global d_f2
+d_f2:
     push ebp
     mov ebp, esp
     finit
@@ -74,8 +74,8 @@ _d_f2:
     leave
     ret 
     
-global _d_f3
-_d_f3:
+global d_f3
+d_f3:
     push ebp
     mov ebp, esp
     finit
