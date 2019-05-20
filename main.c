@@ -18,21 +18,21 @@ double zero(double x)
 
 double t1(double x)
 {
-    return x*x*x*x - 16;
+    return x*x - 16;
 }
 double dt1(double x)
 {
-    return 4*x*x*x;
+    return 2*x;
 }
 
 double t2(double x)
 {
-    return sin(x);
+    return x*x - 16;
 }
 
 double dt2(double x)
 {
-    return cos(x);
+    return 2*x;
 }
 double F(double (*f)(double), double (*g)(double), double x)
 {
@@ -41,13 +41,31 @@ double F(double (*f)(double), double (*g)(double), double x)
 
 double root(double (*f)(double), double (*g)(double), double a, double b, double eps, double (*df)(double), double (*dg)(double))
 {
-    int way = (F(f, g, (a + b) / 2) < (F(f, g, a) +  F(f, g, b)) / 2) == (F(f, g, a) < 0) ? -1 : 1;
-    double c = (way == -1) ? (b - F(f, g, b) / F(df, dg, b)) : (a - F(f, g, a) / F(df, dg, a));
-    while(F(f, g, c) * F(f, g, c + way * eps) > 0)
+    double c;
+    double middle = (a + b) / 2;
+    int lower = F(f, g, middle) < (F(f, g, a) +  F(f, g, b)) / 2;
+    int monotone = F(f, g, a) < 0;
+    if(lower == monotone)
     {
-        c = c - F(f, g, c) / F(df, dg, c);
-        iterations++;
+        c = b - F(f, g, b) / F(df, dg, b);
+        while(F(f, g, c) * F(f, g, c - eps) > 0)
+        {
+            c = c - F(f, g, c) / F(df, dg, c);
+            iterations++;
+        }
+
+
     }
+    else
+    {
+        c = a - F(f, g, a) / F(df, dg, a);
+        while(F(f, g, c) * F(f, g, c + eps) > 0)
+        {
+            c = c - F(f, g, c) / F(df, dg, c);
+            iterations++;
+        }
+    }
+
     return c;
 }
 
@@ -94,19 +112,19 @@ int main(int argc, char **argv)
         else if(strcmp(argv[i], "-i") == 0) printf("f1 == f2 -- %d\nf1 == f2 -- %d\nf1 == f2 -- %d\n", iter1, iter2, iter3);
         else if(strcmp(argv[i], "-t=t1") == 0)
         {
-            printf("test: x^4 - 16 = 0 => x = %f\
+            printf("test: x^2 - 16 = 0, x in [-4, 0] => x = %f\
                    \nintegral(f) = %f\
-                   \nfrom 0.0 to 3.0\n", root(t1, zero, 0.0, 3.0, eps1, dt1, zero),
-                        integral(t1, 0.0, 3.0, eps2));
+                   \nfrom 0.0 to 4.0\n", root(t1, zero, -4.0, 0.0, eps1, dt1, zero),
+                        integral(t1, -4.0, 0.0, eps2));
         }
         else if(strcmp(argv[i], "-t=t2") == 0)
         {
-            printf("test: sin(x) = 0 => x = %f\
+            printf("test: x^2 - 16 = 0, x in [0, 4] => x = %f\
                    \nintegral(f) = %f\
-                   \nfrom 0.1 to 3.2\n", root(t2, zero, 0.1, 3.2, eps1, dt2, zero),
-                        integral(t2, 0.1, 3.2, eps2));
+                   \nfrom 0.0 to 4.0\n", root(t2, zero, 0.0, 4.0, eps1, dt2, zero),
+                        integral(t2, 0.0, 4.0, eps2));
         }
-        else if(strcmp(argv[i], "-help") == 0) printf("-help - shows this list\n-s - square\n-i - iterations\n-t=t1/t2 - test functions\n", f1_c_f2, f1_c_f2, f2_c_f3);
+        else if(strcmp(argv[i], "-help") == 0) printf("-help - shows this list\n-s - square\n-i - iterations\n-t=t1/t2 - test functions\n");
         else printf("Wrong command name. Try -help for supported commands\n");
     }
 
